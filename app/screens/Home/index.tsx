@@ -1,9 +1,11 @@
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { styles } from "./styles";
 import { Plus, Search, SlidersHorizontal } from 'lucide-react-native';
 import { COLORS } from "../../utils/colors";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { CardHome } from "../../components/CardHome";
+import { DATA_SERVICES_ITEMS } from "../../utils/constants";
 
 export const HomeScreen = () => {
 	return (
@@ -31,11 +33,18 @@ export const HomeScreen = () => {
 						height={48} 
 						borderColor={COLORS.GRAY_300} 
 						color={COLORS.GRAY_100} 
-						icon={<SlidersHorizontal color={COLORS.PURPLE_BASE} />} 
+						icon={<SlidersHorizontal color={COLORS.PURPLE_BASE} />}
 					/>
 				</View>
 			</View>
-			<View style={styles.items}></View>
+			<View style={styles.items}>
+				<FlatList
+					data={DATA_SERVICES_ITEMS}
+					keyExtractor={item => String(item.title)}
+					renderItem={({ item }) => <CardHome {...item} />}
+					showsVerticalScrollIndicator={false}
+				/>
+			</View>
 		</View>
 	);
 }

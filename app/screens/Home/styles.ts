@@ -22,8 +22,8 @@ export const styles = StyleSheet.create({
 	},
 	items: {
 		flex: 1,
-		padding: 30,
-		marginTop: 20
+		paddingHorizontal: 20,
+		marginTop: 24
 	},
 	summaryTexts: {
 		flex: 1,

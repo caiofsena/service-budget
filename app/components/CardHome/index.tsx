@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { COLORS } from "../../utils/colors";
 
@@ -7,9 +7,10 @@ type Props = {
   monetaryValue: string;
   status: string;
   title: string;
+  onPress: () => void;
 };
 
-export const CardHome = ({description, monetaryValue, status, title}: Props) => {
+export const CardHome = ({description, monetaryValue, status, title, onPress}: Props) => {
   let tagBackgroundColor, tagCircleBackgroundColor, tagTitleColor;
 
   if (status === 'Aprovado') {
@@ -35,21 +36,21 @@ export const CardHome = ({description, monetaryValue, status, title}: Props) => 
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      <View>
-        <View style={[styles.tag, { backgroundColor: tagBackgroundColor }]}>
-          <View style={[styles.tagCircle, { backgroundColor: tagCircleBackgroundColor }]} />
-          <Text style={[styles.tagTitle, { color: tagTitleColor }]}>{status}</Text>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.description}>{description}</Text>
         </View>
-        <View style={styles.monetaryValue}>
-          <Text style={styles.monetaryValueCipher}>R$</Text>
-          <Text style={styles.monetaryValueNumber}>{monetaryValue}</Text>
+        <View>
+          <View style={[styles.tag, { backgroundColor: tagBackgroundColor }]}>
+            <View style={[styles.tagCircle, { backgroundColor: tagCircleBackgroundColor }]} />
+            <Text style={[styles.tagTitle, { color: tagTitleColor }]}>{status}</Text>
+          </View>
+          <View style={styles.monetaryValue}>
+            <Text style={styles.monetaryValueCipher}>R$</Text>
+            <Text style={styles.monetaryValueNumber}>{monetaryValue}</Text>
+          </View>
         </View>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 } 

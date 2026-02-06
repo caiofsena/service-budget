@@ -41,7 +41,7 @@ export const HomeScreen = () => {
 				<FlatList
 					data={DATA_SERVICES_ITEMS}
 					keyExtractor={item => String(item.title)}
-					renderItem={({ item }) => <CardHome {...item} />}
+					renderItem={({ item }) => <CardHome {...item} onPress={() => {console.log('Card pressed')}} />}
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>

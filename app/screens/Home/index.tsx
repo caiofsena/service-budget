@@ -6,8 +6,22 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { CardHome } from "../../components/CardHome";
 import { DATA_SERVICES_ITEMS } from "../../utils/constants";
+import { useState } from "react";
+import { ModalFilter } from "../../components/ModalFilter";
 
 export const HomeScreen = () => {
+	const [modalSearchVisible, setModalSearchVisible] = useState(false);
+
+	const handleSearchButtonPress = () => {
+		console.log('Search button pressed');
+		setModalSearchVisible(true);
+	}
+
+	const handleSearchButtonClose = () => {
+		console.log('Search button closed');
+		setModalSearchVisible(false);
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.summary}>
@@ -16,7 +30,12 @@ export const HomeScreen = () => {
 					<Text style={styles.summaryDescription}>Você tem 1 item em rascunho</Text>
 				</View>
 				<View style={styles.summaryButton}>
-					<Button icon={<Plus color={COLORS.WHITE} />} label="Novo" />
+					<Button 
+						icon={<Plus color={COLORS.WHITE} />} 
+						label="Novo" 
+						onPress={() => {console.log('pressed Novo')}} 
+						height={48}
+					/>
 				</View>
 			</View>
 			<View style={styles.search}>
@@ -34,6 +53,7 @@ export const HomeScreen = () => {
 						borderColor={COLORS.GRAY_300} 
 						color={COLORS.GRAY_100} 
 						icon={<SlidersHorizontal color={COLORS.PURPLE_BASE} />}
+						onPress={handleSearchButtonPress}
 					/>
 				</View>
 			</View>
@@ -45,6 +65,12 @@ export const HomeScreen = () => {
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>
+			<ModalFilter
+				animationType="slide"
+				transparent
+				visible={modalSearchVisible} 
+				onRequestClose={handleSearchButtonClose}
+			/>
 		</View>
 	);
 }

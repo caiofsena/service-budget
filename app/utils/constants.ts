@@ -48,3 +48,17 @@ export const DATA_SERVICES_ITEMS = [
 				monetaryValue: '27.300,00'
 		}
 ];
+
+export enum Status {
+  APPROVED = 'Aprovado',
+  DRAFT = 'Rascunho',
+  REJECTED = 'Recusado',
+  SENT = 'Enviado'
+}
+
+export enum Order {
+  MOST_RECENT = 'most_recent',
+  OLDEST = 'oldest',
+  HIGHEST_VALUE = 'highest_value',
+  LOWEST_VALUE = 'lowest_value'
+}

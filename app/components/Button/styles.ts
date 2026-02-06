@@ -4,16 +4,18 @@ import { FONTS } from "../../utils/fonts";
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: COLORS.PURPLE_BASE,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 30
+        borderRadius: 999,
+        padding: 12
     },
     text: {
-        ...FONTS.TEXT_SM,
-        color: COLORS.WHITE,
+        ...FONTS.TITLE_SM,
+        color: COLORS.WHITE
+    },
+    textWithIcon: {
         marginLeft: 8
     }
 })

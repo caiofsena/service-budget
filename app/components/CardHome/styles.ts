@@ -30,22 +30,7 @@ export const styles = StyleSheet.create({
     color: COLORS.GRAY_600
   },
   tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 6,
-    paddingVertical: 4,
     marginLeft: 29
-  },
-  tagCircle: {
-    width: 8,
-    height: 8,
-    borderRadius: 999,
-    marginLeft: 8
-  },
-  tagTitle: {
-    ...FONTS.TITLE_XS,
-    color: COLORS.SUCCESS_DARK,
-    marginHorizontal: 6
   },
   monetaryValue: {
     flex: 1,

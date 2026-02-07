@@ -5,9 +5,7 @@ import { COLORS } from "../../utils/colors";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    // backgroundColor: COLORS.WHITE,
+    justifyContent: 'flex-end'
   },
   content: {
     backgroundColor: COLORS.WHITE,

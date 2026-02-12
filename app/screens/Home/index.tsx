@@ -12,21 +12,19 @@ import { useNavigation } from "@react-navigation/native";
 
 export const HomeScreen = () => {
 	const navigation = useNavigation();
-	const [modalSearchVisible, setModalSearchVisible] = useState(false);
+	const [modalFilterVisible, setModalFilterVisible] = useState(false);
 
 	const handleSummaryButtonPress = () => {
 		console.log('Summary button pressed');
 		navigation.navigate('Budget');
 	}
 
-	const handleSearchButtonPress = () => {
-		console.log('Search button pressed');
-		setModalSearchVisible(true);
+	const handleFilterButtonPress = () => {
+		setModalFilterVisible(true);
 	}
 
-	const handleSearchButtonClose = () => {
-		console.log('Search button closed');
-		setModalSearchVisible(false);
+	const handleFilterButtonClose = () => {
+		setModalFilterVisible(false);
 	}
 
 	return (
@@ -61,7 +59,7 @@ export const HomeScreen = () => {
 						borderColor={COLORS.GRAY_300} 
 						color={COLORS.GRAY_100} 
 						icon={<SlidersHorizontal color={COLORS.PURPLE_BASE} />}
-						onPress={handleSearchButtonPress}
+						onPress={handleFilterButtonPress}
 					/>
 				</View>
 			</View>
@@ -76,8 +74,8 @@ export const HomeScreen = () => {
 			<ModalFilter
 				animationType="slide"
 				transparent
-				visible={modalSearchVisible} 
-				onRequestClose={handleSearchButtonClose}
+				visible={modalFilterVisible} 
+				onRequestClose={handleFilterButtonClose}
 			/>
 		</View>
 	);

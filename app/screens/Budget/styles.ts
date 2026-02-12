@@ -222,7 +222,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 20,
     paddingHorizontal: 20,
-    paddingBottom: 40,
     borderTopWidth: 1,
     borderTopColor: COLORS.GRAY_200
   },

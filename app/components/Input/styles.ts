@@ -6,7 +6,8 @@ export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
         borderColor: COLORS.GRAY_300,
         borderWidth: 1,
         borderRadius: 30,

@@ -9,9 +9,19 @@ import { useState } from "react";
 import { TagStatus } from "../../components/TagStatus";
 import { CardService } from "../../components/CardService";
 import { Button } from "../../components/Button";
+import { ModalAddService } from "../../components/ModalAddService";
 
 export const BudgetScreen = () => {
   const [statusChecked, setsStatusChecked] = useState(Status.DRAFT);
+  const [modalAddServiceVisible, setModalServiceVisible] = useState(false);
+  
+  const handleAddServiceButtonPress = () => {
+		setModalServiceVisible(true);
+	}
+
+	const handleAddServiceButtonClose = () => {
+		setModalServiceVisible(false);
+	}
 
   return (
     <ScrollView style={styles.container}>
@@ -109,7 +119,7 @@ export const BudgetScreen = () => {
               color={COLORS.GRAY_100}
               textColor={COLORS.PURPLE_BASE}
               borderColor={COLORS.GRAY_300}
-              onPress={() => {console.log('pressed Add Service')}}
+              onPress={handleAddServiceButtonPress}
             />
           </View>
         </View>
@@ -132,6 +142,7 @@ export const BudgetScreen = () => {
                 styleText={styles.investimentsDiscountPercentageValueText}
                 height={38}
                 width={94}
+                maxLength={3}
                 keyboardType="numeric"
                 right={<Percent size={16} />}
               />
@@ -170,6 +181,12 @@ export const BudgetScreen = () => {
           onPress={() => {console.log('pressed save')}}
         />
       </View>
+      <ModalAddService
+        animationType="slide"
+        transparent
+        visible={modalAddServiceVisible} 
+        onRequestClose={handleAddServiceButtonClose}
+      />
     </ScrollView>
   );
 }

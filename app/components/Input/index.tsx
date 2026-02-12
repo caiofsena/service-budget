@@ -1,26 +1,31 @@
-import { TextInput, TextInputProps, View } from "react-native";
+import { StyleProp, TextInput, TextInputProps, TextStyle, View } from "react-native";
 import { styles } from "./styles";
 
 type Props = TextInputProps & {
 	height?: number;
-	icon?: any;
+	left?: any;
+	right?: any;
 	width?: number;
+	styleText?: StyleProp<TextStyle>;
 };
 
-export const Input = ({height, icon, onChangeText, placeholder, value, width }: Props) => {
+export const Input = ({height, left, right, width, style, styleText, ...props }: Props) => {
 	return (
-		<View style={[styles.container, {width: width || 200, height: height || 48}]}>
-			{icon && 
-				<View style={styles.icon}>
-					{icon}
+		<View style={[styles.container, {width: width || null, height: height || null}, style]}>
+			{left && 
+				<View style={styles.left}>
+					{left}
 				</View>
 			}
 			<TextInput
-				style={[styles.text, {height: height || 48}]}
-				onChangeText={onChangeText}
-				value={value}
-				placeholder={placeholder}
+				{...props}
+				style={[styles.text, {height: height || 48}, styleText]}
 			/>
+			{right && 
+				<View style={styles.right}>
+					{right}
+				</View>
+			}
 		</View>
 	);
 }

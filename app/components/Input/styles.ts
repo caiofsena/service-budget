@@ -12,8 +12,11 @@ export const styles = StyleSheet.create({
         borderRadius: 30,
         backgroundColor: COLORS.GRAY_100
     },
-    icon: {
+    left: {
         marginRight: 8
+    },
+    right: {
+        marginLeft: 8
     },
     text: {
         flex: 1,

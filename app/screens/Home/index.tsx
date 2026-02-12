@@ -8,9 +8,16 @@ import { CardHome } from "../../components/CardHome";
 import { DATA_SERVICES_ITEMS } from "../../utils/constants";
 import { useState } from "react";
 import { ModalFilter } from "../../components/ModalFilter";
+import { useNavigation } from "@react-navigation/native";
 
 export const HomeScreen = () => {
+	const navigation = useNavigation();
 	const [modalSearchVisible, setModalSearchVisible] = useState(false);
+
+	const handleSummaryButtonPress = () => {
+		console.log('Summary button pressed');
+		navigation.navigate('Budget');
+	}
 
 	const handleSearchButtonPress = () => {
 		console.log('Search button pressed');
@@ -33,18 +40,19 @@ export const HomeScreen = () => {
 					<Button 
 						icon={<Plus color={COLORS.WHITE} />} 
 						label="Novo" 
-						onPress={() => {console.log('pressed Novo')}} 
+						onPress={handleSummaryButtonPress} 
 						height={48}
 					/>
 				</View>
 			</View>
 			<View style={styles.search}>
 				<Input 
-					icon={<Search color={COLORS.GRAY_500} size={20} />} 
+					left={<Search color={COLORS.GRAY_500} size={20} />} 
 					placeholder="Título ou cliente" 
-					onChangeText={() => {}} 
 					value="" 
+					height={48}
 					width={310} 
+					onChangeText={() => {}} 
 				/>
 				<View style={styles.searchButton}>
 					<Button 

@@ -8,16 +8,17 @@ type Props = {
   description: string;
   money: string;
   quantity: number;
-  onPressEdit: () => void;
+  showAllTextDescription?: boolean;
+  onPressEdit?: () => void;
 }
 
-export const CardService = ({ title, description, money, quantity, onPressEdit }: Props) => {
+export const CardService = ({ title, description, money, quantity, showAllTextDescription = false, onPressEdit }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.information}>
           <Text style={styles.informationText}>{title}</Text>
-          <Text style={styles.detailText} numberOfLines={1}>{description}</Text>
+          <Text style={styles.detailText} numberOfLines={showAllTextDescription ? 0 : 1}>{description}</Text>
         </View>
         <View style={styles.detail}>
           <View style={styles.informationMoney}>
@@ -27,12 +28,14 @@ export const CardService = ({ title, description, money, quantity, onPressEdit }
           <Text style={styles.detailQuantity}>Qt: {quantity}</Text>
         </View>
       </View>
-      <PencilLine 
-        style={styles.detailIcon} 
-        size={20} 
-        color={COLORS.PURPLE_BASE} 
-        onPress={onPressEdit}
-      />
+      { onPressEdit && 
+        <PencilLine 
+          style={styles.detailIcon} 
+          size={20} 
+          color={COLORS.PURPLE_BASE} 
+          onPress={onPressEdit}
+        />
+      }
     </View>
   );
 }

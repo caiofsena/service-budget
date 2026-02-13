@@ -15,8 +15,11 @@ export const HomeScreen = () => {
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
 
 	const handleSummaryButtonPress = () => {
-		console.log('Summary button pressed');
 		navigation.navigate('Budget');
+	}
+
+	const handleDetailButtonPress = () => {
+		navigation.navigate('Detail');
 	}
 
 	const handleFilterButtonPress = () => {
@@ -67,7 +70,7 @@ export const HomeScreen = () => {
 				<FlatList
 					data={DATA_SERVICES_ITEMS}
 					keyExtractor={item => String(item.title)}
-					renderItem={({ item }) => <CardHome {...item} onPress={() => {console.log('Card pressed')}} />}
+					renderItem={({ item }) => <CardHome {...item} onPress={handleDetailButtonPress} />}
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>

@@ -3,7 +3,7 @@ import { COLORS } from "../../utils/colors";
 import { styles } from "./styles";
 import { Status } from "../../utils/constants";
 
-export const TagStatus = ({ status, style }: { status: string, style?: any }) => {
+export const TagStatus = ({ status, style, text }: { status: string, style?: any, text?: string }) => {
   let tagBackgroundColor, tagCircleBackgroundColor, tagTitleColor;
   if (status === Status.APPROVED) {
     tagBackgroundColor = COLORS.SUCCESS_LIGHT;
@@ -29,8 +29,8 @@ export const TagStatus = ({ status, style }: { status: string, style?: any }) =>
 
   return (
     <View style={[styles.container, { backgroundColor: tagBackgroundColor }, style]}>
-      <View style={[styles.circle, { backgroundColor: tagCircleBackgroundColor }]} />
-      <Text style={[styles.title, { color: tagTitleColor }]}>{status}</Text>
+      { !text && <View style={[styles.circle, { backgroundColor: tagCircleBackgroundColor }]} /> }
+      <Text style={[styles.title, { color: tagTitleColor }]}>{text ?? status}</Text>
     </View>
   );
 }

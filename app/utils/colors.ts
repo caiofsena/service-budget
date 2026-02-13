@@ -7,6 +7,7 @@ export const COLORS = {
     GRAY_600: '#4A4A4A',
     GRAY_700: '#0F0F0F',
     PURPLE_BASE: '#6A46EB',
+    PURPLE_LIGHT: '#DFDAF2',
     SUCCESS_BASE: '#4BB84A',
     SUCCESS_LIGHT: '#BFF7BE',
     SUCCESS_DARK: '#30752F',

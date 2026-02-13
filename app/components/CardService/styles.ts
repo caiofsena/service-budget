@@ -9,10 +9,11 @@ export const styles = StyleSheet.create({
     marginBottom: 20
   },
   content: {
+    flex: 1,
     flexDirection: 'row'
   },
   information: {
-    // justifyContent: "space-between",
+    flex: 1
   },
   informationText: {
     ...FONTS.TITLE_SM,
@@ -21,8 +22,7 @@ export const styles = StyleSheet.create({
   },
   detailText: {
     ...FONTS.TEXT_XS,
-    color: COLORS.GRAY_500,
-    width: 179
+    color: COLORS.GRAY_500
   },
   informationMoney: {
     flexDirection: 'row'

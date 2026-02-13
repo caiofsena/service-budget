@@ -87,7 +87,8 @@ export const styles = StyleSheet.create({
     borderBottomColor: COLORS.GRAY_500
   },
   servicesIncludedData: {
-    padding: 16
+    paddingTop: 16,
+    paddingHorizontal: 16
   },
   servicesIncludedAddButton: {
     paddingHorizontal: 20,

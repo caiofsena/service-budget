@@ -28,7 +28,8 @@ export const styles = StyleSheet.create({
   },
   service: {
     paddingTop: 20,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingBottom: 32
   },
   serviceTitle: {
     marginBottom: 12
@@ -96,9 +97,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginTop: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: COLORS.GRAY_200
+    borderTopColor: COLORS.GRAY_200,
   },
   buttonApply: {
     marginLeft: 12

@@ -5,8 +5,8 @@ import { FONTS } from "../../utils/fonts";
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 32,
-		marginTop: 16
+		paddingTop: 40,
+		backgroundColor: COLORS.WHITE
 	},
 	summary: {
 		paddingVertical: 20,

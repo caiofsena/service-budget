@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20
+    paddingHorizontal: 20,
+    paddingBottom: 20
   },
   highlight: {
     marginBottom: 20,
@@ -95,7 +96,6 @@ export const styles = StyleSheet.create({
   },
   resume: {
     flexDirection: 'row',
-    marginBottom: 20,
     borderWidth: 1,
     borderColor: COLORS.GRAY_200,
     borderRadius: 10,

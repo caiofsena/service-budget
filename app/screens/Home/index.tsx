@@ -31,6 +31,7 @@ export const HomeScreen = () => {
 	}
 
 	return (
+		<>
 		<View style={styles.container}>
 			<View style={styles.summary}>
 				<View style={styles.summaryTexts}>
@@ -74,12 +75,8 @@ export const HomeScreen = () => {
 					showsVerticalScrollIndicator={false}
 				/>
 			</View>
-			<ModalFilter
-				animationType="slide"
-				transparent
-				visible={modalFilterVisible} 
-				onRequestClose={handleFilterButtonClose}
-			/>
 		</View>
+		<ModalFilter visible={modalFilterVisible} onDismiss={handleFilterButtonClose} />
+		</>
 	);
 }

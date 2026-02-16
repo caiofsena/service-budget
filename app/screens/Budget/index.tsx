@@ -184,13 +184,11 @@ export const BudgetScreen = () => {
             onPress={() => {console.log('pressed save')}}
           />
         </View>
-        <ModalAddService
-          animationType="slide"
-          transparent
-          visible={modalAddServiceVisible} 
-          onRequestClose={handleAddServiceButtonClose}
-        />
       </ScrollView>
+      <ModalAddService
+        visible={modalAddServiceVisible} 
+        onDismiss={handleAddServiceButtonClose}
+      />
     </>
   );
 }

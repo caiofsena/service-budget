@@ -6,13 +6,15 @@ import { COLORS } from "../../utils/colors";
 type Props = {
   title: string;
   description: string;
-  money: string;
-  quantity: number;
+  price: string;
+  qty: string;
   showAllTextDescription?: boolean;
   onPressEdit?: () => void;
 }
 
-export const CardService = ({ title, description, money, quantity, showAllTextDescription = false, onPressEdit }: Props) => {
+export const CardService = (
+    { title, description, price, qty, showAllTextDescription = false, onPressEdit }: Props) => 
+  {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -23,9 +25,9 @@ export const CardService = ({ title, description, money, quantity, showAllTextDe
         <View style={styles.detail}>
           <View style={styles.informationMoney}>
             <Text style={styles.informationMoneyCipher}>R$</Text>
-            <Text style={styles.informationMoneyValue}>{money}</Text>
+            <Text style={styles.informationMoneyValue}>{price}</Text>
           </View>
-          <Text style={styles.detailQuantity}>Qt: {quantity}</Text>
+          <Text style={styles.detailQuantity}>Qt: {qty}</Text>
         </View>
       </View>
       { onPressEdit && 

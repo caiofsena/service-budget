@@ -24,6 +24,10 @@ export const BudgetScreen = () => {
   const [statusChecked, setsStatusChecked] = useState(Status.DRAFT);
   const [ services, setServices ] = useState<Service[]>([]);
   const [ discountPct, setDiscountPct ] = useState('');
+  const [serviceTitle, setServiceTitle] = useState('');
+  const [serviceDescription, setServiceDescription] = useState('');
+  const [servicePrice, setServicePrice] = useState('');
+  const [serviceQty, setServiceQty] = useState('1');
 
   const save = async () => {
     let newBudget: Budget = {
@@ -31,7 +35,7 @@ export const BudgetScreen = () => {
       title,
       client,
       status: statusChecked,
-      // items: [],
+      items: services,
       createdAt: new Date()
     };
     if (discountPct) {
@@ -41,13 +45,34 @@ export const BudgetScreen = () => {
     Alert.alert('Orçamento registrado!')
     navigation.navigate('Home');
   }
-  
+
   const handleAddServiceButtonPress = () => {
 		setModalServiceVisible(true);
 	}
 
-	const handleAddServiceButtonClose = () => {
+	const handleAddServiceClose = () => {
 		setModalServiceVisible(false);
+	}
+
+	const handleAddServiceRemove = () => {
+		
+	}
+  
+	const handleAddServiceSave = () => {
+		let newService: Service = {
+      id: generateNewId(),
+      title: serviceTitle,
+      description: serviceDescription,
+      price: servicePrice,
+      qty: serviceQty
+    };
+    services.push(newService);
+    setServices(services);
+    handleAddServiceClose();
+    setServiceTitle('');
+    setServiceDescription('');
+    setServicePrice('');
+    setServiceQty('1');
 	}
 
   const handleSubmit = () => {
@@ -74,7 +99,7 @@ export const BudgetScreen = () => {
                 value={title}
                 onChangeText={setTitle} 
                 height={48}
-                />
+              />
               <Input 
                 style={styles.generalInformationDataClient}
                 placeholder="Cliente" 
@@ -136,9 +161,9 @@ export const BudgetScreen = () => {
             <View style={styles.servicesIncludedData}>
               { services && services.map((item) => {
                 return (
-                  <CardService 
-                    {...item} 
-                    onPressEdit={() => {console.log('pressed card service')}}  
+                  <CardService
+                    {...item}
+                    onPressEdit={() => {console.log('pressed card service')}}
                   />
                 )
               }) }
@@ -216,8 +241,18 @@ export const BudgetScreen = () => {
         />
       </View>
       <ModalAddService
+        title={serviceTitle}
+        description={serviceDescription}
+        price={servicePrice}
+        qty={serviceQty}
+        setTitle={setServiceTitle}
+        setDescription={setServiceDescription}
+        setPrice={setServicePrice}
+        setQty={setServiceQty}
         visible={modalAddServiceVisible} 
-        onDismiss={handleAddServiceButtonClose}
+        onDismiss={handleAddServiceClose}
+        onRemove={handleAddServiceRemove}
+        onSave={handleAddServiceSave}
       />
     </>
   );

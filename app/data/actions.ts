@@ -50,5 +50,4 @@ export const removeBudget = async (id: string) => {
   } catch (error) {
     console.log('Erro ao remover as informações - removeBudget: ', error);    
   }
-  
 }

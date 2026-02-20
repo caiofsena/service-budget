@@ -7,18 +7,33 @@ import { COLORS } from "../../utils/colors";
 import { Input } from "../Input";
 import { Modal } from "react-native-paper";
 
-export const ModalAddService = ({ visible, onDismiss }: {visible: boolean, onDismiss: () => void}) => {
-  const [serviceQuantity, setServiceQuantity] = useState('1');
+type Props = {
+  title: string
+  description: string;
+  price: string;
+  qty: string;
+  visible: boolean;
+  setTitle: (text: string) => void;
+  setDescription: (text: string) => void;
+  setPrice: (text: string) => void;
+  setQty: (text: string) => void;
+  onDismiss: () => void;
+  onRemove: () => void;
+  onSave: () => void;
+}
 
+export const ModalAddService = (
+  { title, description, price, qty, visible, setTitle, setDescription, setPrice, setQty, onDismiss, onRemove, onSave }: Props
+) => {
   const handleServiceDetailQuantityAdd = () => {
-    if (Number(serviceQuantity) < 99) {
-      setServiceQuantity(String(Number(serviceQuantity) + 1));
+    if (Number(qty) < 99) {
+      setQty(String(Number(qty) + 1));
     }
   }
 
   const handleServiceDetailQuantityRemove = () => {
-    if (Number(serviceQuantity) > 1) {
-      setServiceQuantity(String(Number(serviceQuantity) - 1));
+    if (Number(qty) > 1) {
+      setQty(String(Number(qty) - 1));
     }
   }
 
@@ -30,13 +45,21 @@ export const ModalAddService = ({ visible, onDismiss }: {visible: boolean, onDis
           <X size={24} onPress={onDismiss} />
         </View>
         <View style={styles.service}>
-          <Input style={styles.serviceTitle} height={48} placeholder="Título"  />
+          <Input 
+            style={styles.serviceTitle} 
+            height={48} 
+            placeholder="Título" 
+            value={title}  
+            onChangeText={setTitle}
+          />
           <Input 
             style={styles.serviceDescription} 
             styleText={styles.serviceDescriptionText} 
             height={120} 
             multiline  
             placeholder="Descrição"
+            value={description}  
+            onChangeText={setDescription}
           />
           <View style={styles.serviceDetail}>
             <Input 
@@ -44,34 +67,37 @@ export const ModalAddService = ({ visible, onDismiss }: {visible: boolean, onDis
               height={48} 
               placeholder="0,00" 
               left={<Text style={styles.serviceDetailValuePrefix}>R$</Text>}
+              value={price}  
+              onChangeText={setPrice}
             />
             <Input 
               style={styles.serviceDetailQuantity}
               styleText={styles.serviceDetailQuantityText}
               height={46} 
               width={124}
-              value={serviceQuantity}
               editable={false}
               left={<Minus color={COLORS.PURPLE_BASE} onPress={handleServiceDetailQuantityRemove} />}
               right={<Plus color={COLORS.PURPLE_BASE} onPress={handleServiceDetailQuantityAdd} />}
+              value={qty}  
+              onChangeText={setQty}
             />
           </View>
         </View>            
         <View style={styles.buttons}>
           <Button
             icon={<Trash color={COLORS.DANGER_BASE} />}
-            onPress={() => {console.log('pressed deletar')}}
             height={48}
             color={COLORS.GRAY_100}
             textColor={COLORS.PURPLE_BASE}
             borderColor={COLORS.GRAY_300}
+            onPress={onRemove}
           />
           <Button
+            style={styles.buttonApply}
             icon={<Check color={COLORS.WHITE} />}
             label="Salvar"
-            onPress={() => {console.log('pressed salvar')}}
             height={48}
-            style={styles.buttonApply}
+            onPress={onSave}
           />
         </View>
       </View>

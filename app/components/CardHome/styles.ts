@@ -30,13 +30,16 @@ export const styles = StyleSheet.create({
     color: COLORS.GRAY_600
   },
   tag: {
-    marginLeft: 29
+    marginRight: 8,
+    alignSelf: 'flex-end'
   },
   monetaryValue: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginLeft: 12,
+    justifyContent: 'flex-end',
+    paddingLeft: 12,
+    marginRight: 16,
     marginBottom: 8
   },
   monetaryValueCipher: {

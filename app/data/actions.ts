@@ -23,7 +23,6 @@ export const getBudget = async (id: string) => {
 
 export const saveBudget = async (newBudget: Budget) => {
   try {
-    const parseNewBudget = JSON.stringify(newBudget);
     const budgets = await getAllBudgets();
     if (budgets) {
       budgets.push(newBudget);

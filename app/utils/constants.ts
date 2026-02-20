@@ -1,4 +1,4 @@
-export const DATA_SERVICES_ITEMS = [
+export const DATA_BUDGETS = [
 		{
 				title: 'Orçamento 001',
 				description: 'Desenvolvimento de aplicativo de loja online',
@@ -48,6 +48,15 @@ export const DATA_SERVICES_ITEMS = [
 				monetaryValue: '27.300,00'
 		}
 ];
+
+export const DATA_BUDGET_SERVICES = [
+	{
+		title: 'Design de interfaces',
+		description: 'Criação de wireframes e protótipos de alta fidelidade',
+		money: '3.847,50',
+		quantity: 1 
+	}
+]
 
 export enum Status {
   APPROVED = 'Aprovado',

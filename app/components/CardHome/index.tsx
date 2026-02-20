@@ -3,20 +3,19 @@ import { styles } from "./styles";
 import { TagStatus } from "../TagStatus";
 
 type Props = {
-  description: string;
+  client: string;
   monetaryValue: string;
   status: string;
   title: string;
   onPress: () => void;
 };
 
-export const CardHome = ({description, monetaryValue, status, title, onPress}: Props) => {
-
+export const CardHome = ({client, monetaryValue, status, title, onPress}: Props) => {  
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
         <View style={styles.texts}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.description}>{description}</Text>
+          <Text style={styles.description}>{client}</Text>
         </View>
         <View>
           <TagStatus style={styles.tag} status={status} />

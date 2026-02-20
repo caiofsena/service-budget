@@ -5,14 +5,23 @@ import { COLORS } from "../../utils/colors";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { CardHome } from "../../components/CardHome";
-import { DATA_SERVICES_ITEMS } from "../../utils/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalFilter } from "../../components/ModalFilter";
 import { useNavigation } from "@react-navigation/native";
+import { Budget } from "../../data/models";
+import { getAllBudgets } from "../../data/actions";
 
 export const HomeScreen = () => {
 	const navigation = useNavigation();
+	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+	
+	const loader = async () => {
+		const all = await getAllBudgets();
+		if (all) {
+			setBudgets(all);
+		}
+	}
 
 	const handleSummaryButtonPress = () => {
 		navigation.navigate('Budget');
@@ -29,6 +38,15 @@ export const HomeScreen = () => {
 	const handleFilterButtonClose = () => {
 		setModalFilterVisible(false);
 	}
+
+	useEffect(() => {
+		loader();
+	}, [])
+
+	// useEffect(() => {
+	// 	loader();
+	// 	console.log('EFFECT BUDGETS');
+	// }, [budgets])
 
 	return (
 		<>
@@ -69,10 +87,19 @@ export const HomeScreen = () => {
 			</View>
 			<View style={styles.items}>
 				<FlatList
-					data={DATA_SERVICES_ITEMS}
-					keyExtractor={item => String(item.title)}
-					renderItem={({ item }) => <CardHome {...item} onPress={handleDetailButtonPress} />}
+					data={budgets}
+					keyExtractor={item => String(item.id)}
+					renderItem={
+						({ item }) => 
+							<CardHome 
+								title={item.title} 
+								client={item.client} 
+								status={item.status} 
+								onPress={handleDetailButtonPress} 
+							/>
+					}
 					showsVerticalScrollIndicator={false}
+					ListEmptyComponent={<View style={{ alignItems: 'center' }}><Text>Sem orçamentos aqui!</Text></View>}
 				/>
 			</View>
 		</View>

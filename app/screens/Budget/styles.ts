@@ -225,7 +225,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderTopColor: COLORS.GRAY_200
+    borderTopColor: COLORS.GRAY_200,
+    backgroundColor: COLORS.WHITE
   },
   buttonCancel: {
     marginRight: 12

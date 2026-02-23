@@ -43,11 +43,6 @@ export const HomeScreen = () => {
 		loader();
 	}, [])
 
-	// useEffect(() => {
-	// 	loader();
-	// 	console.log('EFFECT BUDGETS');
-	// }, [budgets])
-
 	return (
 		<>
 		<View style={styles.container}>
@@ -92,9 +87,7 @@ export const HomeScreen = () => {
 					renderItem={
 						({ item }) => 
 							<CardHome 
-								title={item.title} 
-								client={item.client} 
-								status={item.status} 
+								{...item}
 								onPress={handleDetailButtonPress} 
 							/>
 					}

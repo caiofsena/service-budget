@@ -5,7 +5,7 @@ import { COLORS } from "../../utils/colors";
 import { Input } from "../../components/Input";
 import { RadioButton } from "../../components/RadioButton";
 import { Status } from "../../utils/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TagStatus } from "../../components/TagStatus";
 import { CardService } from "../../components/CardService";
 import { Button } from "../../components/Button";
@@ -19,15 +19,91 @@ import { saveBudget } from "../../data/actions";
 export const BudgetScreen = () => {
   const navigation = useNavigation();
   const [modalAddServiceVisible, setModalServiceVisible] = useState(false);
-  const [ title, setTitle ] = useState('');
-  const [ client, setClient ] = useState('');
+  const [title, setTitle] = useState('');
+  const [client, setClient] = useState('');
   const [statusChecked, setsStatusChecked] = useState(Status.DRAFT);
-  const [ services, setServices ] = useState<Service[]>([]);
-  const [ discountPct, setDiscountPct ] = useState('');
+  const [services, setServices] = useState<Service[]>([]);
+  const [discountPct, setDiscountPct] = useState('');
+  const [total, setTotal] = useState('0');
+  const [qty, setQty] = useState('0');
+  const [serviceId, setServiceId] = useState('');
   const [serviceTitle, setServiceTitle] = useState('');
   const [serviceDescription, setServiceDescription] = useState('');
   const [servicePrice, setServicePrice] = useState('');
   const [serviceQty, setServiceQty] = useState('1');
+
+  const clearServiceFields = () => {
+    setServiceId('');
+    setServiceTitle('');
+    setServiceDescription('');
+    setServicePrice('');
+    setServiceQty('1');
+  }
+
+  const handleServiceAdd = () => {
+		setModalServiceVisible(true);
+	}
+
+  const handleServiceEdit = (id: string) => {
+    const filteredService = services.find(item => item.id === id);
+    if (filteredService) {
+      setServiceId(filteredService.id);
+      setServiceTitle(filteredService.title);
+      setServiceDescription(filteredService.description);
+      setServicePrice(filteredService.price);
+      setServiceQty(filteredService.qty);
+      setModalServiceVisible(true);
+    }
+	}
+
+	const handleServiceClose = () => {
+    clearServiceFields();
+		setModalServiceVisible(false);
+	}
+
+	const handleServiceRemove = (id: string) => {
+		const filteredRemoveService = services.filter(item => item.id != id);
+    setServices(filteredRemoveService);
+    handleServiceClose();
+	}
+  
+	const handleServiceSave = async (id?: string) => {
+    let newService: Service;
+    if (id) {
+      const updatedServices = services.map(item => {
+        if (item.id === id) {
+          return {
+            ...item,
+            title: serviceTitle,
+            description: serviceDescription,
+            price: servicePrice,
+            qty: serviceQty    
+          } as Service
+        }
+        return item;
+      });
+      if (updatedServices) {
+        setServices(updatedServices as Service[]);
+        Alert.alert('Serviço atualizado!');
+      }
+    } else {
+      newService = {
+        id: generateNewId(),
+        title: serviceTitle,
+        description: serviceDescription,
+        price: servicePrice,
+        qty: serviceQty
+      };
+      const updatedServices = [...services, newService] as Service[];
+      setServices(updatedServices)
+      Alert.alert('Serviço registrado!');
+    }
+    handleServiceClose();
+	}
+
+  const discountValue = () => {
+    return ((Number(total) * Number(discountPct)) / 100).toString();
+  }
 
   const save = async () => {
     let newBudget: Budget = {
@@ -36,6 +112,8 @@ export const BudgetScreen = () => {
       client,
       status: statusChecked,
       items: services,
+      total,
+      qty,
       createdAt: new Date()
     };
     if (discountPct) {
@@ -46,35 +124,6 @@ export const BudgetScreen = () => {
     navigation.navigate('Home');
   }
 
-  const handleAddServiceButtonPress = () => {
-		setModalServiceVisible(true);
-	}
-
-	const handleAddServiceClose = () => {
-		setModalServiceVisible(false);
-	}
-
-	const handleAddServiceRemove = () => {
-		
-	}
-  
-	const handleAddServiceSave = () => {
-		let newService: Service = {
-      id: generateNewId(),
-      title: serviceTitle,
-      description: serviceDescription,
-      price: servicePrice,
-      qty: serviceQty
-    };
-    services.push(newService);
-    setServices(services);
-    handleAddServiceClose();
-    setServiceTitle('');
-    setServiceDescription('');
-    setServicePrice('');
-    setServiceQty('1');
-	}
-
   const handleSubmit = () => {
     save();
   }
@@ -82,6 +131,18 @@ export const BudgetScreen = () => {
   const handleCancel = () => {
     navigation.goBack();
   }
+
+  useEffect(() => {
+    let updatedTotal = 0, updatedQty = 0;
+    setTotal('0');
+    setQty('0');
+    services.forEach((item, index) => {
+      updatedTotal += Number(item.price) * Number(item.qty); 
+      updatedQty += Number(item.qty);      
+    })
+    setTotal(String(updatedTotal));
+    setQty(String(updatedQty));
+  }, [services])
 
   return (
     <>
@@ -162,8 +223,9 @@ export const BudgetScreen = () => {
               { services && services.map((item) => {
                 return (
                   <CardService
+                    key={item.id}
                     {...item}
-                    onPressEdit={() => {console.log('pressed card service')}}
+                    onPressEdit={() => handleServiceEdit(item.id)}
                   />
                 )
               }) }
@@ -175,7 +237,7 @@ export const BudgetScreen = () => {
                 color={COLORS.GRAY_100}
                 textColor={COLORS.PURPLE_BASE}
                 borderColor={COLORS.GRAY_300}
-                onPress={handleAddServiceButtonPress}
+                onPress={handleServiceAdd}
               />
             </View>
           </View>
@@ -186,9 +248,9 @@ export const BudgetScreen = () => {
             </View>
             <View style={styles.investimentsSubtotal}>
               <Text style={styles.investimentsSubtotalText}>Subtotal</Text>
-              <Text style={styles.investimentsSubtotalItems}>8 itens</Text>
+              <Text style={styles.investimentsSubtotalItems}>{qty} {`${Number(qty) > 1 ? 'itens' : 'item' }`}</Text>
               <Text style={styles.investimentsSubtotalCipher}>R$</Text>
-              <Text style={styles.investimentsSubtotalValue}>3.847,50</Text>
+              <Text style={styles.investimentsSubtotalValue}>{total}</Text>
             </View>
             <View style={styles.investimentsDiscount}>
               <View style={styles.investimentsDiscountPercentage}>
@@ -198,23 +260,27 @@ export const BudgetScreen = () => {
                   styleText={styles.investimentsDiscountPercentageValueText}
                   height={38}
                   width={94}
-                  maxLength={3}
+                  maxLength={2}
                   value={discountPct}
-                  keyboardType="numeric"
+                  placeholder={'0'}
+                  keyboardType='numeric'
                   right={<Percent size={16} />}
                   onChangeText={setDiscountPct}
+                  editable={services && services.length > 0 ? true : false}
                 />
               </View>
-              <Text style={styles.investimentsDiscountReduceCipher}>- R$</Text>
-              <Text style={styles.investimentsDiscountReduceValue}>200,00</Text>
+              { Number(discountPct) > 0 &&  <View style={styles.investimentsDiscountReduce}>
+                <Text style={styles.investimentsDiscountReduceCipher}>- R$</Text>
+                <Text style={styles.investimentsDiscountReduceValue}>{discountValue()}</Text>
+              </View> }
             </View>
             <View style={styles.investimentsTotal}>
               <Text style={styles.investimentsTotalText}>Valor total</Text>
               <View style={styles.investimentsTotalResume}>
-                <Text style={styles.investimentsTotalResumeOriginal}>R$ 4.050,00</Text>
+                { Number(discountPct) > 0 &&<Text style={styles.investimentsTotalResumeOriginal}>{total}</Text> }
                 <View style={styles.investimentsTotalResumeValueFinal}>
                   <Text style={styles.investimentsTotalResumeValueFinalCipher}>R$</Text>
-                  <Text style={styles.investimentsTotalResumeValueFinalValue}>3.847,50</Text>
+                  <Text style={styles.investimentsTotalResumeValueFinalValue}>{Number(total) - Number(discountValue())}</Text>
                 </View>
               </View>
             </View>
@@ -224,7 +290,7 @@ export const BudgetScreen = () => {
       <View style={styles.buttons}>
         <Button
           style={styles.buttonCancel}
-          label="Cancelar"
+          label='Cancelar'
           width={95}
           height={48}
           color={COLORS.GRAY_100}
@@ -233,7 +299,7 @@ export const BudgetScreen = () => {
           onPress={handleCancel}
           />
         <Button 
-          label="Salvar"
+          label='Salvar'
           width={95}
           height={48}
           icon={<Check color={COLORS.WHITE} />}
@@ -241,6 +307,7 @@ export const BudgetScreen = () => {
         />
       </View>
       <ModalAddService
+        id={serviceId}
         title={serviceTitle}
         description={serviceDescription}
         price={servicePrice}
@@ -250,9 +317,9 @@ export const BudgetScreen = () => {
         setPrice={setServicePrice}
         setQty={setServiceQty}
         visible={modalAddServiceVisible} 
-        onDismiss={handleAddServiceClose}
-        onRemove={handleAddServiceRemove}
-        onSave={handleAddServiceSave}
+        onDismiss={handleServiceClose}
+        onRemove={handleServiceRemove}
+        onSave={handleServiceSave}
       />
     </>
   );

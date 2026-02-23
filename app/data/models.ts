@@ -7,6 +7,8 @@ export type Budget = {
   items?: Service[];
   discountPct?: string;
   status: Status;
+  total?: string;
+  qty?: string;
   createdAt: Date;
   updatedAt?: Date;
 }

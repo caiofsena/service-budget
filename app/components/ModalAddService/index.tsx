@@ -1,13 +1,13 @@
 import { Check, Minus, Plus, Trash, X } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
-import { useState } from "react";
 import { Button } from "../Button";
 import { COLORS } from "../../utils/colors";
 import { Input } from "../Input";
 import { Modal } from "react-native-paper";
 
 type Props = {
+  id?: string;
   title: string
   description: string;
   price: string;
@@ -18,12 +18,12 @@ type Props = {
   setPrice: (text: string) => void;
   setQty: (text: string) => void;
   onDismiss: () => void;
-  onRemove: () => void;
-  onSave: () => void;
+  onRemove: (id: string) => void;
+  onSave: (id?: string) => void;
 }
 
 export const ModalAddService = (
-  { title, description, price, qty, visible, setTitle, setDescription, setPrice, setQty, onDismiss, onRemove, onSave }: Props
+  { id, title, description, price, qty, visible, setTitle, setDescription, setPrice, setQty, onDismiss, onRemove, onSave }: Props
 ) => {
   const handleServiceDetailQuantityAdd = () => {
     if (Number(qty) < 99) {
@@ -84,20 +84,20 @@ export const ModalAddService = (
           </View>
         </View>            
         <View style={styles.buttons}>
-          <Button
+          { id && <Button
             icon={<Trash color={COLORS.DANGER_BASE} />}
             height={48}
             color={COLORS.GRAY_100}
             textColor={COLORS.PURPLE_BASE}
             borderColor={COLORS.GRAY_300}
-            onPress={onRemove}
-          />
+            onPress={() => onRemove(id)}
+          /> }
           <Button
             style={styles.buttonApply}
             icon={<Check color={COLORS.WHITE} />}
             label="Salvar"
             height={48}
-            onPress={onSave}
+            onPress={() => onSave(id)}
           />
         </View>
       </View>

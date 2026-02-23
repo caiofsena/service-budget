@@ -171,6 +171,11 @@ export const styles = StyleSheet.create({
     color: COLORS.DANGER_BASE,
     marginLeft: 4
   },
+  investimentsDiscountReduce: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16
+  },
   investimentsDiscountReduceCipher: {
     ...FONTS.TEXT_XS,
     color: COLORS.DANGER_BASE
@@ -178,7 +183,8 @@ export const styles = StyleSheet.create({
   investimentsDiscountReduceValue: {
     ...FONTS.TEXT_SM,
     color: COLORS.DANGER_BASE,
-    marginRight: 16
+    paddingBottom: 2,
+    marginLeft: 4
   },
   investimentsTotal: {
     flexDirection: 'row',

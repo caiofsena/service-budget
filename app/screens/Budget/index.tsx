@@ -13,7 +13,7 @@ import { ModalAddService } from "../../components/ModalAddService";
 import { HeaderBudget } from "../../components/headerBudget";
 import { Budget, Service } from "../../data/models";
 import { useNavigation } from "@react-navigation/native";
-import { generateNewId } from "../../utils/helpers";
+import { generateNewId, totalDiscountValue } from "../../utils/helpers";
 import { saveBudget } from "../../data/actions";
 
 export const BudgetScreen = () => {
@@ -100,10 +100,6 @@ export const BudgetScreen = () => {
     }
     handleServiceClose();
 	}
-
-  const discountValue = () => {
-    return ((Number(total) * Number(discountPct)) / 100).toString();
-  }
 
   const save = async () => {
     let newBudget: Budget = {
@@ -271,16 +267,16 @@ export const BudgetScreen = () => {
               </View>
               { Number(discountPct) > 0 &&  <View style={styles.investimentsDiscountReduce}>
                 <Text style={styles.investimentsDiscountReduceCipher}>- R$</Text>
-                <Text style={styles.investimentsDiscountReduceValue}>{discountValue()}</Text>
+                <Text style={styles.investimentsDiscountReduceValue}>{totalDiscountValue(total, discountPct)}</Text>
               </View> }
             </View>
             <View style={styles.investimentsTotal}>
               <Text style={styles.investimentsTotalText}>Valor total</Text>
               <View style={styles.investimentsTotalResume}>
-                { Number(discountPct) > 0 &&<Text style={styles.investimentsTotalResumeOriginal}>{total}</Text> }
+                { Number(discountPct) > 0 && <Text style={styles.investimentsTotalResumeOriginal}>{total}</Text> }
                 <View style={styles.investimentsTotalResumeValueFinal}>
                   <Text style={styles.investimentsTotalResumeValueFinalCipher}>R$</Text>
-                  <Text style={styles.investimentsTotalResumeValueFinalValue}>{Number(total) - Number(discountValue())}</Text>
+                  <Text style={styles.investimentsTotalResumeValueFinalValue}>{Number(total) - Number(totalDiscountValue(total, discountPct))}</Text>
                 </View>
               </View>
             </View>

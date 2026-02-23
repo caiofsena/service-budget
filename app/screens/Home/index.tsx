@@ -10,16 +10,21 @@ import { ModalFilter } from "../../components/ModalFilter";
 import { useNavigation } from "@react-navigation/native";
 import { Budget } from "../../data/models";
 import { getAllBudgets } from "../../data/actions";
+import { totalValue } from "../../utils/helpers";
+import { Status } from "../../utils/constants";
 
 export const HomeScreen = () => {
 	const navigation = useNavigation();
 	const [budgets, setBudgets] = useState<Budget[]>([]);
+	const [filteredBudgets, setFilteredBudgets] = useState<Budget[]>([]);
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
+	const [searchTitleOrClient, setSearchTitleOrClient] = useState('');
 	
 	const loader = async () => {
 		const all = await getAllBudgets();
 		if (all) {
 			setBudgets(all);
+			setFilteredBudgets(all);
 		}
 	}
 
@@ -39,6 +44,30 @@ export const HomeScreen = () => {
 		setModalFilterVisible(false);
 	}
 
+	const qtyDraftBudgets = () => {
+		let qty = 0;
+		budgets.forEach(item => {
+			if (item.status === Status.DRAFT) {
+				qty += 1;
+			}
+		});
+		return qty;
+	}
+
+	const filterByTitleOrClient = (text: string) => {
+		setSearchTitleOrClient(text);
+		if (text) {
+			const filtered = 
+				budgets.filter(item => 
+					(item.title.toLowerCase().includes(text.toLowerCase()) || 
+						item.client.toLowerCase().includes(text.toLowerCase())) 
+				);
+			setFilteredBudgets(filtered);
+		} else {
+			setFilteredBudgets(budgets);
+		}
+	}
+
 	useEffect(() => {
 		loader();
 	}, [])
@@ -49,7 +78,7 @@ export const HomeScreen = () => {
 			<View style={styles.summary}>
 				<View style={styles.summaryTexts}>
 					<Text style={styles.summaryTitle}>Orçamentos</Text>
-					<Text style={styles.summaryDescription}>Você tem 1 item em rascunho</Text>
+					<Text style={styles.summaryDescription}>Você tem {qtyDraftBudgets()} {qtyDraftBudgets() > 1 ? 'itens' : 'item' } em rascunho</Text>
 				</View>
 				<View style={styles.summaryButton}>
 					<Button 
@@ -64,10 +93,10 @@ export const HomeScreen = () => {
 				<Input 
 					left={<Search color={COLORS.GRAY_500} size={20} />} 
 					placeholder="Título ou cliente" 
-					value="" 
+					value={searchTitleOrClient}
 					height={48}
 					width={310} 
-					onChangeText={() => {}} 
+					onChangeText={filterByTitleOrClient}
 				/>
 				<View style={styles.searchButton}>
 					<Button 
@@ -82,12 +111,14 @@ export const HomeScreen = () => {
 			</View>
 			<View style={styles.items}>
 				<FlatList
-					data={budgets}
+					data={filteredBudgets}
 					keyExtractor={item => String(item.id)}
 					renderItem={
 						({ item }) => 
 							<CardHome 
+								key={item.id}
 								{...item}
+								monetaryValue={item.total ? totalValue(item.total, item.discountPct) : ''}
 								onPress={handleDetailButtonPress} 
 							/>
 					}

@@ -11,18 +11,21 @@ import { useNavigation } from "@react-navigation/native";
 import { Budget } from "../../data/models";
 import { getAllBudgets } from "../../data/actions";
 import { totalValue } from "../../utils/helpers";
-import { Status } from "../../utils/constants";
+import { Order, Status } from "../../utils/constants";
 
 export const HomeScreen = () => {
 	const navigation = useNavigation();
 	const [budgets, setBudgets] = useState<Budget[]>([]);
 	const [filteredBudgets, setFilteredBudgets] = useState<Budget[]>([]);
 	const [modalFilterVisible, setModalFilterVisible] = useState(false);
-	const [searchTitleOrClient, setSearchTitleOrClient] = useState('');
-	
+	const [filterTitleOrClient, setFilterTitleOrClient] = useState('');
+	const [filterStatus, setFilterStatus] = useState<Status[]>([]);
+	const [ordering, setOrdering] = useState<Order>(Order.MOST_RECENT);
+
 	const loader = async () => {
-		const all = await getAllBudgets();
+		let all = await getAllBudgets();
 		if (all) {
+			all = all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 			setBudgets(all);
 			setFilteredBudgets(all);
 		}
@@ -54,18 +57,56 @@ export const HomeScreen = () => {
 		return qty;
 	}
 
+	const resetFilters = () => {
+		setFilteredBudgets(budgets);
+	}
+
 	const filterByTitleOrClient = (text: string) => {
-		setSearchTitleOrClient(text);
+		setFilterTitleOrClient(text);
 		if (text) {
 			const filtered = 
-				budgets.filter(item => 
+				filteredBudgets.filter(item => 
 					(item.title.toLowerCase().includes(text.toLowerCase()) || 
 						item.client.toLowerCase().includes(text.toLowerCase())) 
 				);
 			setFilteredBudgets(filtered);
 		} else {
-			setFilteredBudgets(budgets);
+			resetFilters();
 		}
+	}
+
+	const handleFilterAndOrder = () => {
+		let filtered = filteredBudgets;
+
+		if (filterStatus && filterStatus.length > 0) {
+			filtered = filtered.filter(item => filterStatus.find(status => status === item.status));
+		} 
+
+		if (ordering) {
+			if (ordering === Order.MOST_RECENT) {
+				filtered = filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			}
+			if (ordering === Order.OLDEST) {
+				filtered = filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+			}
+			if (ordering === Order.HIGHEST_VALUE) {
+				filtered = filtered.sort((a, b) => Number(b.total) - Number(a.total));
+			}
+			if (ordering === Order.LOWEST_VALUE) {
+				filtered = filtered.sort((a, b) => Number(a.total) - Number(b.total));
+			}
+		}
+
+		if (filtered) {
+			setFilteredBudgets(filtered);
+		}
+
+		handleFilterButtonClose();
+	}
+
+	const handleResetFilters = () => {
+		resetFilters();
+		handleFilterButtonClose();
 	}
 
 	useEffect(() => {
@@ -83,7 +124,7 @@ export const HomeScreen = () => {
 				<View style={styles.summaryButton}>
 					<Button 
 						icon={<Plus color={COLORS.WHITE} />} 
-						label="Novo" 
+						label='Novo'
 						onPress={handleSummaryButtonPress} 
 						height={48}
 					/>
@@ -92,8 +133,8 @@ export const HomeScreen = () => {
 			<View style={styles.search}>
 				<Input 
 					left={<Search color={COLORS.GRAY_500} size={20} />} 
-					placeholder="Título ou cliente" 
-					value={searchTitleOrClient}
+					placeholder='Título ou cliente'
+					value={filterTitleOrClient}
 					height={48}
 					width={310} 
 					onChangeText={filterByTitleOrClient}
@@ -127,7 +168,16 @@ export const HomeScreen = () => {
 				/>
 			</View>
 		</View>
-		<ModalFilter visible={modalFilterVisible} onDismiss={handleFilterButtonClose} />
+		<ModalFilter 
+			listFilter={filterStatus}
+			order={ordering}
+			setListFilter={setFilterStatus}
+			setOrder={setOrdering}
+			apply={handleFilterAndOrder}
+			reset={handleResetFilters}
+			visible={modalFilterVisible} 
+			onDismiss={handleFilterButtonClose}
+		/>
 		</>
 	);
 }

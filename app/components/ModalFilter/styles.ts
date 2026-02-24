@@ -62,7 +62,8 @@ export const styles = StyleSheet.create({
    orderItemText: {
     ...FONTS.TEXT_MD,
     color: COLORS.GRAY_600,
-    marginLeft: 4
+    marginLeft: 4,
+    paddingBottom: 2
   },
   buttons: {
     flexDirection: 'row',

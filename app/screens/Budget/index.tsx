@@ -68,7 +68,7 @@ export const BudgetScreen = () => {
 	}
   
 	const handleServiceSave = async (id?: string) => {
-    let newService: Service;
+    let newService: Service;    
     if (id) {
       const updatedServices = services.map(item => {
         if (item.id === id) {
@@ -102,22 +102,26 @@ export const BudgetScreen = () => {
 	}
 
   const save = async () => {
-    let newBudget: Budget = {
-      id: generateNewId(),
-      title,
-      client,
-      status: statusChecked,
-      items: services,
-      total,
-      qty,
-      createdAt: new Date()
-    };
-    if (discountPct) {
-      newBudget = { ...newBudget, discountPct: discountPct }
+    if (title.length < 0 || client.length < 0 || (services && services.length > 0)) {
+      let newBudget: Budget = {
+        id: generateNewId(),
+        title,
+        client,
+        status: statusChecked,
+        items: services,
+        total,
+        qty,
+        createdAt: new Date()
+      };
+      if (discountPct) {
+        newBudget = { ...newBudget, discountPct: discountPct }
+      }
+      await saveBudget(newBudget);
+      Alert.alert('Orçamento registrado!')
+      navigation.navigate('Home');
+    } else {
+      Alert.alert('Preencher campos!')
     }
-    await saveBudget(newBudget);
-    Alert.alert('Orçamento registrado!')
-    navigation.navigate('Home');
   }
 
   const handleSubmit = () => {

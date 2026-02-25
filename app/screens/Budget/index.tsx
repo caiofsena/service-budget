@@ -221,7 +221,7 @@ export const BudgetScreen = () => {
               <Text style={styles.servicesIncludedTitleText}>Serviços incluídos</Text>
             </View>
             <View style={styles.servicesIncludedData}>
-              { services && services.map((item) => {
+              { services && services.map(item => {
                 return (
                   <CardService
                     key={item.id}
@@ -229,7 +229,7 @@ export const BudgetScreen = () => {
                     onPressEdit={() => handleServiceEdit(item.id)}
                   />
                 )
-              }) }
+              })}
             </View>
             <View style={styles.servicesIncludedAddButton}>
               <Button

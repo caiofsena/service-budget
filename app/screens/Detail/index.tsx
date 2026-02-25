@@ -12,6 +12,7 @@ import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getBudget } from "../../data/actions";
 import { Budget } from "../../data/models";
+import { totalDiscountValue } from "../../utils/helpers";
 
 export const DetailScreen = () => {
   const route = useRoute();
@@ -38,7 +39,7 @@ export const DetailScreen = () => {
   return (
     <>
       <HeaderDetail status={data.status} />
-      <SafeAreaView style={styles.container}>x
+      <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.content}>
             <View style={styles.highlight}>
@@ -46,22 +47,22 @@ export const DetailScreen = () => {
                 <View style={styles.highlightTitleIcon}>
                   <Store size={20} color={COLORS.PURPLE_BASE} />
                 </View>
-                <Text style={styles.highlightTitleText}>Desenvolvimento de aplicativo de loja online</Text>
+                <Text style={styles.highlightTitleText}>{data.title}</Text>
               </View>
               <View style={styles.highlightData}>
                 <View style={styles.highlightDataClient}>
                   <Text style={styles.highlightDataClientTitle}>Cliente</Text>
-                  <Text style={styles.highlightDataClientDescription}>Soluções Tecnológicas Beta</Text>
+                  <Text style={styles.highlightDataClientDescription}>{data.client}</Text>
                 </View>
                 <View style={styles.highlightDataDate}>
                   <View style={styles.highlightDataDateCreated}>
                     <Text style={styles.highlightDataClientTitle}>Criado em</Text>
-                    <Text style={styles.highlightDataClientDescription}>22/08/2024</Text>
+                    <Text style={styles.highlightDataClientDescription}>{data.createdAt.toString()}</Text>
                   </View>
-                  <View style={styles.highlightDataDateUpdated}>
+                  { data.updatedAt && <View style={styles.highlightDataDateUpdated}>
                     <Text style={styles.highlightDataClientTitle}>Atualizado em</Text>
-                    <Text style={styles.highlightDataClientDescription}>25/08/2024</Text>
-                  </View>
+                    <Text style={styles.highlightDataClientDescription}>{data.updatedAt?.toString()}</Text>
+                  </View> }
                 </View>
               </View>
             </View>
@@ -71,52 +72,52 @@ export const DetailScreen = () => {
                 <Text style={styles.servicesIncludedTitleText}>Serviços incluídos</Text>
               </View>
               <View style={styles.servicesIncludedData}>
-                <CardService 
-                  title="Design de interfaces" 
-                  description="Criação de wireframes e protótipos de alta fidelidade" 
-                  money="3.847,50" 
-                  quantity={1} 
-                  showAllTextDescription
-                />
-                <CardService 
-                  title="Design de interfaces" 
-                  description="Criação de wireframes e protótipos de alta fidelidade" 
-                  money="3.847,50" 
-                  quantity={1}
-                  showAllTextDescription
-                />
+                { data.items && data.items.map(item => {
+                  return(
+                    <CardService 
+                      key={item.id}
+                      title={item.title}
+                      description={item.description}
+                      price={item.price}
+                      qty={item.qty} 
+                      showAllTextDescription
+                    />
+                  )
+                })}
               </View>
             </View>
-            <View style={styles.resume}>
-              <View style={styles.resumeIcon}>
-                <View style={styles.resumeIconItem}>
-                  <CreditCard size={20} color={COLORS.PURPLE_BASE} />
-                </View>
-              </View>
-              <View style={styles.resumeValue}>
-                <View style={styles.resumeValueData}>
-                  <View style={styles.resumeValueDataSubtotal}>
-                    <Text style={styles.resumeValueDataSubtotalTitle}>Subtotal</Text>
-                    <Text style={styles.resumeValueDataSubtotalDescription}>R$ 4.050,00</Text>
-                  </View>
-                  <View style={styles.resumeValueDataDiscount}>
-                    <View style={styles.resumeValueDataDiscountText}>
-                      <Text style={styles.resumeValueDataDiscountTitle}>Desconto</Text>
-                      <TagStatus style={styles.resumeValueDataDiscountTag} status={Status.APPROVED} text="5% off" />
-                    </View>
-                    <Text style={styles.resumeValueDataDiscountDescription}>- R$ 200,00</Text>
-                  </View>
-                  <View style={styles.line} />
-                  <View style={styles.resumeValueDataTotal}>
-                    <Text style={styles.resumeValueDataTotalTitle}>Investimento total</Text>
-                    <View style={styles.resumeValueDataTotalDescription}>
-                      <Text style={styles.resumeValueDataTotalDescriptionCipher}>R$</Text>
-                      <Text style={styles.resumeValueDataTotalDescriptionMoney}>4.050,00</Text>
-                    </View>
+            { data.total &&
+              <View style={styles.resume}>
+                <View style={styles.resumeIcon}>
+                  <View style={styles.resumeIconItem}>
+                    <CreditCard size={20} color={COLORS.PURPLE_BASE} />
                   </View>
                 </View>
-              </View>
-            </View>
+                <View style={styles.resumeValue}>
+                  <View style={styles.resumeValueData}>
+                    <View style={styles.resumeValueDataSubtotal}>
+                      <Text style={styles.resumeValueDataSubtotalTitle}>Subtotal</Text>
+                      <Text style={data.discountPct ? styles.resumeValueDataSubtotalDescription : styles.resumeValueDataSubtotalDescriptionNormal}>R$ {data.total}</Text>
+                    </View>
+                    <View style={styles.resumeValueDataDiscount}>
+                      <View style={styles.resumeValueDataDiscountText}>
+                        <Text style={styles.resumeValueDataDiscountTitle}>Desconto</Text>
+                        { data.discountPct && <TagStatus style={styles.resumeValueDataDiscountTag} status={Status.APPROVED} text={`${data.discountPct}% off`} /> }
+                      </View>
+                      <Text style={styles.resumeValueDataDiscountDescription}>{data.discountPct ? '-' : ''} R$ {totalDiscountValue(data.total, data.discountPct)}</Text>
+                    </View>
+                    <View style={styles.line} />
+                    <View style={styles.resumeValueDataTotal}>
+                      <Text style={styles.resumeValueDataTotalTitle}>Investimento total</Text>
+                      <View style={styles.resumeValueDataTotalDescription}>
+                        <Text style={styles.resumeValueDataTotalDescriptionCipher}>R$</Text>
+                        <Text style={styles.resumeValueDataTotalDescriptionMoney}>{Number(data.total) - Number(totalDiscountValue(data.total, data.discountPct))}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View> 
+            }
           </View>
         </ScrollView>
         <View style={styles.buttons}>

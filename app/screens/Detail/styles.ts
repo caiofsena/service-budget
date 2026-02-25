@@ -138,6 +138,10 @@ export const styles = StyleSheet.create({
     ...FONTS.TEXT_SM,
     color: COLORS.GRAY_600,
   },
+  resumeValueDataSubtotalDescriptionNormal: {
+    ...FONTS.TITLE_XS,
+    color: COLORS.GRAY_600
+  },
   resumeValueDataSubtotalDescription: {
     ...FONTS.TITLE_XS,
     color: COLORS.GRAY_600,

@@ -7,13 +7,13 @@ import { Status } from "../../utils/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
-export const HeaderDetail = () => {
+export const HeaderDetail = ({status}: {status: Status}) => {
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <ChevronLeft color={COLORS.GRAY_600} onPress={() => navigation.goBack()} />
       <Text style={styles.text}>Orçamento</Text>
-      <TagStatus status={Status.SENT} />
+      <TagStatus status={status} />
     </SafeAreaView>
   );
 }

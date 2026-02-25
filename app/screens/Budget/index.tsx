@@ -18,6 +18,7 @@ import { saveBudget } from "../../data/actions";
 
 export const BudgetScreen = () => {
   const navigation = useNavigation();
+
   const [modalAddServiceVisible, setModalServiceVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [client, setClient] = useState('');

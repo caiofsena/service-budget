@@ -35,8 +35,8 @@ export const HomeScreen = () => {
 		navigation.navigate('Budget');
 	}
 
-	const handleDetailButtonPress = () => {
-		navigation.navigate('Detail');
+	const handleDetailButtonPress = (id: string) => {
+		navigation.navigate('Detail', {id});
 	}
 
 	const handleFilterButtonPress = () => {
@@ -160,7 +160,7 @@ export const HomeScreen = () => {
 								key={item.id}
 								{...item}
 								monetaryValue={item.total ? totalValue(item.total, item.discountPct) : ''}
-								onPress={handleDetailButtonPress} 
+								onPress={() => handleDetailButtonPress(item.id)} 
 							/>
 					}
 					showsVerticalScrollIndicator={false}

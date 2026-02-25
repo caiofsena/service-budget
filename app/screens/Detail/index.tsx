@@ -8,12 +8,37 @@ import { Status } from "../../utils/constants";
 import { Button } from "../../components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HeaderDetail } from "../../components/headerDetail";
+import { useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { getBudget } from "../../data/actions";
+import { Budget } from "../../data/models";
 
 export const DetailScreen = () => {
+  const route = useRoute();
+  const id = route.params.id;
+  const [data, setData] = useState<Budget>();
+
+  const loader = async () => {
+    if (id) {
+      const budget = await getBudget(id);
+      if (budget) {
+        setData(budget);
+      }
+    }
+  };
+
+  useEffect(() => {
+    loader();
+  }, []);
+
+  if (!data) {
+    return null;
+  }
+
   return (
     <>
-      <HeaderDetail />
-      <SafeAreaView style={styles.container}>
+      <HeaderDetail status={data.status} />
+      <SafeAreaView style={styles.container}>x
         <ScrollView>
           <View style={styles.content}>
             <View style={styles.highlight}>

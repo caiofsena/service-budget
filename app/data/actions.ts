@@ -40,7 +40,7 @@ export const removeBudget = async (id: string) => {
   try {
     const budgets = await getAllBudgets();
     if (budgets) {
-      const filteredBudget = budgets ? budgets.find((item) => item.id !== id) : null;
+      const filteredBudget = budgets ? budgets.filter((item) => item.id !== id) : null;
       const newBudgets = JSON.stringify(filteredBudget);
       await AsyncStorage.setItem(store+'budgets', newBudgets);
     } else {

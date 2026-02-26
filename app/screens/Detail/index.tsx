@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import { Copy, CreditCard, PencilLine, ReceiptText, Send, Store, Trash } from "lucide-react-native";
 import { COLORS } from "../../utils/colors";
@@ -8,16 +8,44 @@ import { Status } from "../../utils/constants";
 import { Button } from "../../components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HeaderDetail } from "../../components/headerDetail";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { getBudget } from "../../data/actions";
+import { getBudget, removeBudget, saveBudget } from "../../data/actions";
 import { Budget } from "../../data/models";
-import { totalDiscountValue } from "../../utils/helpers";
+import { generateNewId, totalDiscountValue } from "../../utils/helpers";
 
 export const DetailScreen = () => {
+  const navigation = useNavigation();
   const route = useRoute();
   const id = route.params.id;
   const [data, setData] = useState<Budget>();
+
+  const handleCopy = async () => {
+    const currentBudget = await getBudget(id);
+    if (currentBudget) {
+      await saveBudget({ ...currentBudget, id: generateNewId(), });
+      Alert.alert('Orçamento duplicado!');
+      navigation.navigate('Home');
+    }
+  }
+
+  const handleRemove = async () => {
+    Alert.alert(
+      'Aviso', 
+      'Deseja excluir o orçamento?', 
+      [
+        { text: 'Não' }, 
+        { 
+          text: 'Sim', 
+          onPress: async () => {
+            await removeBudget(id);
+            Alert.alert('Orçamento removido!');
+            navigation.navigate('Home');
+          }
+        }
+      ]
+    );
+  }
 
   const loader = async () => {
     if (id) {
@@ -124,7 +152,7 @@ export const DetailScreen = () => {
           <View style={styles.buttonsOnlyIcon}>
             <Button
               icon={<Trash color={COLORS.DANGER_BASE} />}
-              onPress={() => {console.log('pressed deletar')}}
+              onPress={handleRemove}
               height={48}
               width={48}
               color={COLORS.GRAY_100}
@@ -133,7 +161,7 @@ export const DetailScreen = () => {
             />
             <Button
               icon={<Copy color={COLORS.PURPLE_BASE} />}
-              onPress={() => {console.log('pressed salvar')}}
+              onPress={handleCopy}
               height={48}
               width={48}
               color={COLORS.GRAY_100}

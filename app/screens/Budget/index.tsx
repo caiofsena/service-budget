@@ -69,37 +69,41 @@ export const BudgetScreen = () => {
 	}
   
 	const handleServiceSave = async (id?: string) => {
-    let newService: Service;    
-    if (id) {
-      const updatedServices = services.map(item => {
-        if (item.id === id) {
-          return {
-            ...item,
-            title: serviceTitle,
-            description: serviceDescription,
-            price: servicePrice,
-            qty: serviceQty    
-          } as Service
+    if (serviceTitle && serviceDescription && servicePrice) {
+      let newService: Service; 
+      if (id) {
+        const updatedServices = services.map(item => {
+          if (item.id === id) {
+            return {
+              ...item,
+              title: serviceTitle,
+              description: serviceDescription,
+              price: servicePrice,
+              qty: serviceQty    
+            } as Service
+          }
+          return item;
+        });
+        if (updatedServices) {
+          setServices(updatedServices as Service[]);
+          Alert.alert('Serviço atualizado!');
         }
-        return item;
-      });
-      if (updatedServices) {
-        setServices(updatedServices as Service[]);
-        Alert.alert('Serviço atualizado!');
+      } else {
+        newService = {
+          id: generateNewId(),
+          title: serviceTitle,
+          description: serviceDescription,
+          price: servicePrice,
+          qty: serviceQty
+        };
+        const updatedServices = [...services, newService] as Service[];
+        setServices(updatedServices)
+        Alert.alert('Serviço registrado!');
       }
+      handleServiceClose();
     } else {
-      newService = {
-        id: generateNewId(),
-        title: serviceTitle,
-        description: serviceDescription,
-        price: servicePrice,
-        qty: serviceQty
-      };
-      const updatedServices = [...services, newService] as Service[];
-      setServices(updatedServices)
-      Alert.alert('Serviço registrado!');
-    }
-    handleServiceClose();
+      Alert.alert('Preencher campos!')
+    }  
 	}
 
   const save = async () => {

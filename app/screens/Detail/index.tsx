@@ -1,4 +1,4 @@
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Share, Text, View } from "react-native";
 import { styles } from "./styles";
 import { Copy, CreditCard, PencilLine, ReceiptText, Send, Store, Trash } from "lucide-react-native";
 import { COLORS } from "../../utils/colors";
@@ -45,6 +45,16 @@ export const DetailScreen = () => {
         }
       ]
     );
+  }
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `Orçamento ${data?.title} no valor de R$ ${data?.total}`
+      });
+    } catch (error) {
+      Alert.alert(error.message);
+    }
   }
 
   const loader = async () => {
@@ -183,7 +193,7 @@ export const DetailScreen = () => {
           <Button
             icon={<Send color={COLORS.WHITE} />}
             label="Compartilhar"
-            onPress={() => {console.log('pressed salvar')}}
+            onPress={handleShare}
             height={48}
             width={146}
           />

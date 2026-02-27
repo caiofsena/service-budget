@@ -58,7 +58,8 @@ export const HomeScreen = () => {
 	}
 
 	const resetFilters = () => {
-		setFilteredBudgets(budgets);
+		setFilterStatus([]);
+		setFilteredBudgets(budgets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
 	}
 
 	const filterByTitleOrClient = (text: string) => {
@@ -76,11 +77,17 @@ export const HomeScreen = () => {
 	}
 
 	const handleFilterAndOrder = () => {
-		let filtered = filteredBudgets;
-
+		let filtered = budgets;
 		if (filterStatus && filterStatus.length > 0) {
-			filtered = filtered.filter(item => filterStatus.find(status => status === item.status));
-		} 
+			filtered = budgets.filter(item => {
+				const matchItem = filterStatus.find(status => status === item.status);
+				if (matchItem) {
+					return item;
+				}
+			});
+		} else {
+			filtered = budgets;
+		}
 
 		if (ordering) {
 			if (ordering === Order.MOST_RECENT) {
@@ -96,11 +103,9 @@ export const HomeScreen = () => {
 				filtered = filtered.sort((a, b) => Number(a.total) - Number(b.total));
 			}
 		}
-
 		if (filtered) {
 			setFilteredBudgets(filtered);
 		}
-
 		handleFilterButtonClose();
 	}
 

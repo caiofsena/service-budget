@@ -12,17 +12,20 @@ import { Button } from "../../components/Button";
 import { ModalAddService } from "../../components/ModalAddService";
 import { HeaderBudget } from "../../components/headerBudget";
 import { Budget, Service } from "../../data/models";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { generateNewId, totalDiscountValue } from "../../utils/helpers";
-import { saveBudget } from "../../data/actions";
+import { getBudget, saveBudget, updateBudget } from "../../data/actions";
 
 export const BudgetScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const id = route?.params?.id;
 
+  const [editableBudget, setEditableBudget] = useState<Budget>();
   const [modalAddServiceVisible, setModalServiceVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [client, setClient] = useState('');
-  const [statusChecked, setsStatusChecked] = useState(Status.DRAFT);
+  const [statusChecked, setStatusChecked] = useState(Status.DRAFT);
   const [services, setServices] = useState<Service[]>([]);
   const [discountPct, setDiscountPct] = useState('');
   const [total, setTotal] = useState('0');
@@ -108,22 +111,43 @@ export const BudgetScreen = () => {
 
   const save = async () => {
     if (title.length < 0 || client.length < 0 || (services && services.length > 0)) {
-      let newBudget: Budget = {
-        id: generateNewId(),
-        title,
-        client,
-        status: statusChecked,
-        items: services,
-        total,
-        qty,
-        createdAt: new Date()
-      };
-      if (discountPct) {
-        newBudget = { ...newBudget, discountPct: discountPct }
+      if (id) {
+        let updatedBudget: Budget = {
+          ...editableBudget,
+          id: editableBudget?.id || id,
+          title,
+          client,
+          status: statusChecked,
+          items: services,
+          total,
+          qty,
+          updatedAt: new Date()
+        };
+        if (discountPct) {
+          updatedBudget = { ...updatedBudget, discountPct: discountPct }
+        }
+        await updateBudget(updatedBudget);
+        Alert.alert('Orçamento atualizado!')
+        navigation.navigate('Detail', {id});
+      } else {
+        let newBudget: Budget = {
+          id: generateNewId(),
+          title,
+          client,
+          status: statusChecked,
+          items: services,
+          total,
+          qty,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        if (discountPct) {
+          newBudget = { ...newBudget, discountPct: discountPct }
+        }
+        await saveBudget(newBudget);
+        Alert.alert('Orçamento registrado!')
+        navigation.navigate('Home');
       }
-      await saveBudget(newBudget);
-      Alert.alert('Orçamento registrado!')
-      navigation.navigate('Home');
     } else {
       Alert.alert('Preencher campos!')
     }
@@ -135,6 +159,24 @@ export const BudgetScreen = () => {
 
   const handleCancel = () => {
     navigation.goBack();
+  }
+
+  const loader = async () => {
+    if (id) {
+      const budget = await getBudget(id);
+      if (budget) {
+        setEditableBudget(budget);
+        setTitle(budget.title);
+        setClient(budget.client);
+        setStatusChecked(budget.status);
+        if (budget.items) {
+          setServices(budget.items);
+        }
+        if (budget.discountPct) {
+          setDiscountPct(budget.discountPct);
+        }
+      }
+    }
   }
 
   useEffect(() => {
@@ -149,9 +191,13 @@ export const BudgetScreen = () => {
     setQty(String(updatedQty));
   }, [services])
 
+  useEffect(() => {
+    loader();
+  }, [])
+
   return (
     <>
-      <HeaderBudget />
+      <HeaderBudget status={editableBudget?.status} id={editableBudget?.id} />
       <ScrollView style={styles.container}>
         <View style={styles.content}>
           <View style={styles.generalInformation}>
@@ -171,7 +217,7 @@ export const BudgetScreen = () => {
                 placeholder="Cliente" 
                 value={client}
                 height={48}
-                onChangeText={setClient} 
+                onChangeText={setClient}
               />
             </View>
           </View>
@@ -186,7 +232,7 @@ export const BudgetScreen = () => {
                   <RadioButton
                     value={statusChecked}
                     validate={Status.DRAFT}
-                    onPress={() => setsStatusChecked(Status.DRAFT)}
+                    onPress={() => setStatusChecked(Status.DRAFT)}
                   />
                   <TagStatus style={styles.statusDataItemTag} status={Status.DRAFT} />
                 </View>
@@ -194,7 +240,7 @@ export const BudgetScreen = () => {
                   <RadioButton
                     value={statusChecked}
                     validate={Status.APPROVED}
-                    onPress={() => setsStatusChecked(Status.APPROVED)}
+                    onPress={() => setStatusChecked(Status.APPROVED)}
                   />
                   <TagStatus style={styles.statusDataItemTag} status={Status.APPROVED} />
                 </View>
@@ -204,7 +250,7 @@ export const BudgetScreen = () => {
                   <RadioButton
                     value={statusChecked}
                     validate={Status.SENT}
-                    onPress={() => setsStatusChecked(Status.SENT)}
+                    onPress={() => setStatusChecked(Status.SENT)}
                   />
                   <TagStatus style={styles.statusDataItemTag} status={Status.SENT} />
                 </View>
@@ -212,7 +258,7 @@ export const BudgetScreen = () => {
                   <RadioButton
                     value={statusChecked}
                     validate={Status.REJECTED}
-                    onPress={() => setsStatusChecked(Status.REJECTED)}
+                    onPress={() => setStatusChecked(Status.REJECTED)}
                   />
                   <TagStatus style={styles.statusDataItemTag} status={Status.REJECTED} />
                 </View>

@@ -21,9 +21,8 @@ export const DetailScreen = () => {
   const [data, setData] = useState<Budget>();
 
   const handleCopy = async () => {
-    const currentBudget = await getBudget(id);
-    if (currentBudget) {
-      await saveBudget({ ...currentBudget, id: generateNewId(), });
+    if (data) {
+      await saveBudget({ ...data, id: generateNewId(), createdAt: new Date(), updatedAt: new Date() });
       Alert.alert('Orçamento duplicado!');
       navigation.navigate('Home');
     }
@@ -57,6 +56,10 @@ export const DetailScreen = () => {
     }
   }
 
+  const handleEdit = () => {
+    navigation.navigate('Budget', {id: data?.id});
+  }
+
   const loader = async () => {
     if (id) {
       const budget = await getBudget(id);
@@ -76,7 +79,7 @@ export const DetailScreen = () => {
 
   return (
     <>
-      <HeaderDetail status={data.status} />
+      <HeaderDetail status={data.status} id={data.id} />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <View style={styles.content}>
@@ -93,10 +96,10 @@ export const DetailScreen = () => {
                   <Text style={styles.highlightDataClientDescription}>{data.client}</Text>
                 </View>
                 <View style={styles.highlightDataDate}>
-                  <View style={styles.highlightDataDateCreated}>
+                  { data.createdAt && <View style={styles.highlightDataDateCreated}>
                     <Text style={styles.highlightDataClientTitle}>Criado em</Text>
                     <Text style={styles.highlightDataClientDescription}>{data.createdAt.toString()}</Text>
-                  </View>
+                  </View> }
                   { data.updatedAt && <View style={styles.highlightDataDateUpdated}>
                     <Text style={styles.highlightDataClientTitle}>Atualizado em</Text>
                     <Text style={styles.highlightDataClientDescription}>{data.updatedAt?.toString()}</Text>
@@ -181,7 +184,7 @@ export const DetailScreen = () => {
             />
             <Button
               icon={<PencilLine color={COLORS.PURPLE_BASE} />}
-              onPress={() => {console.log('pressed salvar')}}
+              onPress={handleEdit}
               height={48}
               width={48}
               color={COLORS.GRAY_100}

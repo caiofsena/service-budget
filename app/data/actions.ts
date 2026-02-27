@@ -36,6 +36,29 @@ export const saveBudget = async (newBudget: Budget) => {
   }
 }
 
+export const updateBudget = async (budget: Budget) => {
+  try {
+    const budgets = await getAllBudgets();
+    if (budgets) {
+      const filteredBudget = 
+        budgets ? budgets.map((item) => {
+          if (item.id === budget.id) {
+            return {
+              ...budget
+            }
+          }
+          return item;
+        }) : null;
+      const updatedBudgets = JSON.stringify(filteredBudget);
+      await AsyncStorage.setItem(store+'budgets', updatedBudgets);
+    } else {
+      throw new Error('Erro ao recuperar as informações - saveBudget');
+    }
+  } catch (error) {
+    console.log('Erro ao salvar as informações - saveBudget: ', error);
+  }
+}
+
 export const removeBudget = async (id: string) => {
   try {
     const budgets = await getAllBudgets();

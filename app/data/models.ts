@@ -9,7 +9,7 @@ export type Budget = {
   status: Status;
   total?: string;
   qty?: string;
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt?: Date;
 }
 

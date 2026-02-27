@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 import { styles } from "./styles";
 import { PencilLine } from "lucide-react-native";
 import { COLORS } from "../../utils/colors";
+import { moneyFormat } from "../../utils/helpers";
 
 type Props = {
   title: string;
@@ -25,7 +26,7 @@ export const CardService = (
         <View style={styles.detail}>
           <View style={styles.informationMoney}>
             <Text style={styles.informationMoneyCipher}>R$</Text>
-            <Text style={styles.informationMoneyValue}>{price}</Text>
+            <Text style={styles.informationMoneyValue}>{moneyFormat(price)}</Text>
           </View>
           <Text style={styles.detailQuantity}>Qt: {qty}</Text>
         </View>

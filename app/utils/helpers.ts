@@ -12,3 +12,10 @@ export const totalDiscountValue = (total: string, discountPct?: string) => {
 export const totalValue = (total: string, discountPct?: string) => {
   return String(Number(total) - Number(totalDiscountValue(total, discountPct)))
 }
+
+export const moneyFormat = (value: string) => new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+}).format(Number(value)).replace('R$', '');

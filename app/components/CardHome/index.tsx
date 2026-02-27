@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 import { TagStatus } from "../TagStatus";
+import { moneyFormat } from "../../utils/helpers";
 
 type Props = {
   client: string;
@@ -21,7 +22,7 @@ export const CardHome = ({client, monetaryValue, status, title, onPress}: Props)
           <TagStatus style={styles.tag} status={status} />
           <View style={styles.monetaryValue}>
             <Text style={styles.monetaryValueCipher}>R$</Text>
-            <Text style={styles.monetaryValueNumber}>{monetaryValue}</Text>
+            <Text style={styles.monetaryValueNumber}>{moneyFormat(monetaryValue)}</Text>
           </View>
         </View>
     </TouchableOpacity>

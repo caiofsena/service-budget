@@ -12,12 +12,12 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getBudget, removeBudget, saveBudget } from "../../data/actions";
 import { Budget } from "../../data/models";
-import { generateNewId, totalDiscountValue } from "../../utils/helpers";
+import { generateNewId, moneyFormat, totalDiscountValue } from "../../utils/helpers";
 
 export const DetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const id = route.params.id;
+  const id = route?.params?.id;
   const [data, setData] = useState<Budget>();
 
   const handleCopy = async () => {
@@ -138,21 +138,21 @@ export const DetailScreen = () => {
                   <View style={styles.resumeValueData}>
                     <View style={styles.resumeValueDataSubtotal}>
                       <Text style={styles.resumeValueDataSubtotalTitle}>Subtotal</Text>
-                      <Text style={data.discountPct ? styles.resumeValueDataSubtotalDescription : styles.resumeValueDataSubtotalDescriptionNormal}>R$ {data.total}</Text>
+                      <Text style={data.discountPct ? styles.resumeValueDataSubtotalDescription : styles.resumeValueDataSubtotalDescriptionNormal}>R$ {moneyFormat(data.total)}</Text>
                     </View>
                     <View style={styles.resumeValueDataDiscount}>
                       <View style={styles.resumeValueDataDiscountText}>
                         <Text style={styles.resumeValueDataDiscountTitle}>Desconto</Text>
                         { data.discountPct && <TagStatus style={styles.resumeValueDataDiscountTag} status={Status.APPROVED} text={`${data.discountPct}% off`} /> }
                       </View>
-                      <Text style={styles.resumeValueDataDiscountDescription}>{data.discountPct ? '-' : ''} R$ {totalDiscountValue(data.total, data.discountPct)}</Text>
+                      <Text style={styles.resumeValueDataDiscountDescription}>{data.discountPct ? '-' : ''} R$ {moneyFormat(totalDiscountValue(data.total, data.discountPct))}</Text>
                     </View>
                     <View style={styles.line} />
                     <View style={styles.resumeValueDataTotal}>
                       <Text style={styles.resumeValueDataTotalTitle}>Investimento total</Text>
                       <View style={styles.resumeValueDataTotalDescription}>
                         <Text style={styles.resumeValueDataTotalDescriptionCipher}>R$</Text>
-                        <Text style={styles.resumeValueDataTotalDescriptionMoney}>{Number(data.total) - Number(totalDiscountValue(data.total, data.discountPct))}</Text>
+                        <Text style={styles.resumeValueDataTotalDescriptionMoney}>{moneyFormat(String(Number(data.total) - Number(totalDiscountValue(data.total, data.discountPct))))}</Text>
                       </View>
                     </View>
                   </View>

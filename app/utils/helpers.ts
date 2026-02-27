@@ -19,3 +19,5 @@ export const moneyFormat = (value: string) => new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 }).format(Number(value)).replace('R$', '');
+
+export const dateFormat = (date: Date) => new Date(date).toLocaleDateString('pt-BR');

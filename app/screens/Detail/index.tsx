@@ -12,7 +12,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { getBudget, removeBudget, saveBudget } from "../../data/actions";
 import { Budget } from "../../data/models";
-import { generateNewId, moneyFormat, totalDiscountValue } from "../../utils/helpers";
+import { dateFormat, generateNewId, moneyFormat, totalDiscountValue } from "../../utils/helpers";
 
 export const DetailScreen = () => {
   const navigation = useNavigation();
@@ -98,11 +98,11 @@ export const DetailScreen = () => {
                 <View style={styles.highlightDataDate}>
                   { data.createdAt && <View style={styles.highlightDataDateCreated}>
                     <Text style={styles.highlightDataClientTitle}>Criado em</Text>
-                    <Text style={styles.highlightDataClientDescription}>{data.createdAt.toString()}</Text>
+                    <Text style={styles.highlightDataClientDescription}>{dateFormat(data.createdAt)}</Text>
                   </View> }
                   { data.updatedAt && <View style={styles.highlightDataDateUpdated}>
                     <Text style={styles.highlightDataClientTitle}>Atualizado em</Text>
-                    <Text style={styles.highlightDataClientDescription}>{data.updatedAt?.toString()}</Text>
+                    <Text style={styles.highlightDataClientDescription}>{dateFormat(data.updatedAt)}</Text>
                   </View> }
                 </View>
               </View>
